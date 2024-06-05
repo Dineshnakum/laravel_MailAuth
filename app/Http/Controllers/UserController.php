@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EmailVarification;
+use Str;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\EmailVarification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Str;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -107,7 +108,7 @@ class UserController extends Controller
         $data['body1'] = 'your OTP is ';
         $data['body2'] = ' Please dont share with anyone. If your are not request for otp then ignor it. ';
         // return $data;
-        Mail::send('sendmail', compact('data'), function ($message) use ($data) {
+        Mail::send('sendmail', ['data' => $data], function ($message) use ($data) {
             $message->to($data['email'])->subject($data['subject']);
         });
     }
@@ -236,5 +237,12 @@ class UserController extends Controller
         } else {
             echo "<h1> data not updated</h1>";
         }
+    }
+
+    public function logout()
+    {
+        Session::flush();
+        Auth::logout();
+        return redirect()->route('login')->with('success', 'You have been logged out.');
     }
 }

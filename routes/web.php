@@ -28,4 +28,5 @@ Route::controller(UserController::class)->group(function() {
 
     Route::post('/updatepass', 'updatepass')->name('updatepass');
 
+    Route::post('/logout', 'logout')->name('logout');
 });
